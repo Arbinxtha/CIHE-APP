@@ -1,26 +1,32 @@
 <?php
 
-namespace App\Providers;
+namespace App\Console\Commands;
 
 use App\Models\ScheduledNotification;
 use App\Models\User;
 use App\Notifications\UserMessageNotification;
-use Illuminate\Support\ServiceProvider;
+use Illuminate\Console\Command;
 
-class AppServiceProvider extends ServiceProvider
+class SendScheduledNotifications extends Command
 {
     /**
-     * Register any application services.
+     * The name and signature of the console command.
+     *
+     * @var string
      */
-    public function register(): void
-    {
-        //
-    }
+    protected $signature = 'notifications:send';
 
     /**
-     * Bootstrap any application services.
+     * The console command description.
+     *
+     * @var string
      */
-    public function boot(): void
+    protected $description = 'Send scheduled notifications to selected users';
+
+    /**
+     * Execute the console command.
+     */
+    public function handle()
     {
         $now = now();
 
@@ -39,5 +45,6 @@ class AppServiceProvider extends ServiceProvider
 
             $notification->update(['is_sent' => true]);
         }
+        $this->info('Scheduled notifications sent successfully.');
     }
 }

@@ -68,8 +68,6 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:sanctum', 'admin']], f
   // Group member management routes
   Route::get('groups/{group_id}/members', [GroupMemberController::class, 'index']);
   Route::post('groups/{group_id}/members', [GroupMemberController::class, 'store']);
-  // Route::get('groups/{group_id}/members/{user_id}', [GroupMemberController::class, 'show']);
-  // Route::put('groups/{group_id}/members/{user_id}', [GroupMemberController::class, 'update']);
   Route::delete('groups/{group_id}/members/{id}', [GroupMemberController::class, 'destroy']);
 
 
@@ -132,14 +130,14 @@ Route::group(['prefix' => 'lecturer', 'middleware' => ['auth:sanctum', 'lecturer
   // Delete an assignment
   Route::delete('assignments/{id}', [LecturerAssignmentController::class, 'destroy']);
 
-  // List submissions for assignments created by the lecturer
-  Route::get('submissions', [LecturerSubmissionController::class, 'index']);
+  // // List submissions for assignments created by the lecturer
+  // Route::get('submissions', [LecturerSubmissionController::class, 'index']);
 
-  // View details of a specific submission
-  Route::get('submissions/{id}', [LecturerSubmissionController::class, 'show']);
+  // // View details of a specific submission
+  // Route::get('submissions/{id}', [LecturerSubmissionController::class, 'show']);
 
-  // Update submission status and add feedback (approve/reject)
-  Route::put('submissions/{id}', [LecturerSubmissionController::class, 'update']);
+  // // Update submission status and add feedback (approve/reject)
+  // Route::put('submissions/{id}', [LecturerSubmissionController::class, 'update']);
 
   Route::get('courses', [TeacherCourseController::class, 'index']);
 
@@ -173,8 +171,17 @@ Route::middleware('auth:sanctum')->group(function () {
   Route::put('update-profile', [ProfileController::class, 'update']);
   Route::post('change-password', [ProfileController::class, 'changepassword']);
 
+
+
   // Get all notifications for the current user
   Route::get('notifications', [NotificationController::class, 'index']);
+  Route::post('notifications', [NotificationController::class, 'store']);
+  Route::get('get-schedule-notification',[NotificationController::class,'get_notifications']);
+  Route::delete('delete-schedule-notification/{id}',[NotificationController::class,'deletenotification']);
+  Route::get('get-schedule-notification-by-month/{month}',[NotificationController::class,'notificationbymonth']);
+  Route::get('get-schedule-notification-by-day/{day}',[NotificationController::class,'notificationbyday']);
+  Route::get('get-all-schedule-notification',[NotificationController::class,'getAllScheduledNotifications']);
+  Route::get('notifications-students', [NotificationController::class, 'getstudents']);
 
   // Mark a specific notification as read
   Route::put('notifications/{id}/read', [NotificationController::class, 'markAsRead']);
