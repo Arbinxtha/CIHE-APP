@@ -17,7 +17,6 @@ use App\Http\Controllers\API\StudentSubmissionController;
 use App\Http\Controllers\API\TeacherCourseController;
 use Illuminate\Support\Facades\Broadcast;
 
-
 Route::post('/login', [AuthController::class, 'login']);
 
 // Logout endpoint protected by Sanctum authentication
