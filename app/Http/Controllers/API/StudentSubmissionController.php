@@ -165,77 +165,77 @@ class StudentSubmissionController extends Controller
     /**
      * Create a new submission for an assignment.
      */
-    public function store(Request $request)
-    {
-        $student = $request->user();
+    // public function store(Request $request)
+    // {
+    //     $student = $request->user();
 
-        $validatedData = $request->validate([
-            'assignment_id' => 'required|exists:assignments,id',
-            'content'       => 'nullable|string',
-            'file_url'      => 'file|max:2048',
-        ]);
+    //     $validatedData = $request->validate([
+    //         'assignment_id' => 'required|exists:assignments,id',
+    //         'content'       => 'nullable|string',
+    //         'file_url'      => 'file|max:2048',
+    //     ]);
 
-        // Optionally, ensure the student hasn't already submitted for this assignment.
-        if (Submission::where('assignment_id', $validatedData['assignment_id'])
-            ->where('student_id', $student->id)
-            ->exists()
-        ) {
-            return response()->json(['error' => 'You have already submitted this assignment'], 409);
-        }
-
-
-        if ($request->hasFile('file_url')) {
-            $file = $request->file('file_url');
-            // Generate a unique file name, e.g., using the current timestamp and original file name
-            $filename = time() . '_' . $file->getClientOriginalName();
-
-            // Define a destination path in your public folder (e.g., public/uploads/submissions)
-            $destinationPath = 'uploads/submissions';
-
-            // Move the file to the destination path
-            $file->move($destinationPath, $filename);
-
-            // Build the relative path to be stored in the database
-            $path = 'uploads/submissions/' . $filename;
-
-            // Now, you can save $path to your DB along with other submission data
-            $validatedData['file_url'] = $path;
-        }
+    //     // Optionally, ensure the student hasn't already submitted for this assignment.
+    //     if (Submission::where('assignment_id', $validatedData['assignment_id'])
+    //         ->where('student_id', $student->id)
+    //         ->exists()
+    //     ) {
+    //         return response()->json(['error' => 'You have already submitted this assignment'], 409);
+    //     }
 
 
-        $validatedData['student_id'] = $student->id;
-        $validatedData['status'] = 'submitted'; // default status
+    //     if ($request->hasFile('file_url')) {
+    //         $file = $request->file('file_url');
+    //         // Generate a unique file name, e.g., using the current timestamp and original file name
+    //         $filename = time() . '_' . $file->getClientOriginalName();
 
-        $submission = Submission::create($validatedData);
-        // Retrieve the assignment to get the associated teacher (lecturer)
-        $assignment = Assignment::findOrFail($validatedData['assignment_id']);
+    //         // Define a destination path in your public folder (e.g., public/uploads/submissions)
+    //         $destinationPath = 'uploads/submissions';
 
-        $teacher = $assignment->lecturer;
+    //         // Move the file to the destination path
+    //         $file->move($destinationPath, $filename);
 
-        // Send notification to the teacher
-        $teacher->notify(new CustomNotification(
-            'Assignment Submitted',
-            "A student has submitted the assignment: {$assignment->title}. Please review it.",
-            url('lecturer/submissions/', $assignment->id) // adjust this route as needed
-        ));
-        return response()->json([
-            'message'    => 'Submisasion created successfully',
-            'submission' => $submission
-        ], 201);
-    }
+    //         // Build the relative path to be stored in the database
+    //         $path = 'uploads/submissions/' . $filename;
+
+    //         // Now, you can save $path to your DB along with other submission data
+    //         $validatedData['file_url'] = $path;
+    //     }
+
+
+    //     $validatedData['student_id'] = $student->id;
+    //     $validatedData['status'] = 'submitted'; // default status
+
+    //     $submission = Submission::create($validatedData);
+    //     // Retrieve the assignment to get the associated teacher (lecturer)
+    //     $assignment = Assignment::findOrFail($validatedData['assignment_id']);
+
+    //     $teacher = $assignment->lecturer;
+
+    //     // Send notification to the teacher
+    //     $teacher->notify(new CustomNotification(
+    //         'Assignment Submitted',
+    //         "A student has submitted the assignment: {$assignment->title}. Please review it.",
+    //         url('lecturer/submissions/', $assignment->id) // adjust this route as needed
+    //     ));
+    //     return response()->json([
+    //         'message'    => 'Submisasion created successfully',
+    //         'submission' => $submission
+    //     ], 201);
+    // }
 
     /**
      * Show a specific submission.
      */
-    public function show(Request $request, $id)
-    {
-        $student = $request->user();
-        $submission = Submission::with('assignment')->findOrFail($id);
-        if ($submission->student_id != $student->id) {
-            return response()->json(['error' => 'Unauthorized'], 403);
-        }
-        return response()->json($submission);
-    }
+    // public function show(Request $request, $id)
+    // {
+    //     $student = $request->user();
+    //     $submission = Submission::with('assignment')->findOrFail($id);
+    //     if ($submission->student_id != $student->id) {
+    //         return response()->json(['error' => 'Unauthorized'], 403);
+    //     }
+    //     return response()->json($submission);
+    // }
 
     /**
      * Update an existing submission.
