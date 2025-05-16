@@ -411,6 +411,19 @@ class NotificationController extends DM_Basecontroller
                 return response()->json([
                     'students' => $students,
                 ]);
+            }else {
+                 $studentIds = GroupMember::whereIn('group_id', $groupIds)
+                    ->where('user_id', '!=', $userId)
+                    ->pluck('user_id');
+
+                $students = User::where('role', 'student')
+                    ->get(['id', 'role', 'username']);
+
+                parent::saveLog('Admin fetched students from same group.');
+
+                return response()->json([
+                    'students' => $students,
+                ]);
             }
 
 
