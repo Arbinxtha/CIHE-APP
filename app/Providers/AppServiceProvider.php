@@ -5,6 +5,7 @@ namespace App\Providers;
 use App\Models\ScheduledNotification;
 use App\Models\User;
 use App\Notifications\UserMessageNotification;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -23,12 +24,14 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $now = now();
+        // Log::info($now->toFormattedDateString());
 
         $notifications = ScheduledNotification::where('scheduled_at', '<=', $now)
-            ->where('is_sent', false)
+            ->where('is_sent', 0)
             ->get();
-
+Log::info($notifications);
         foreach ($notifications as $notification) {
+            Log::info($notification);
             $userIds = json_decode($notification->user_ids, true);
 
             $users = User::whereIn('id', $userIds)->get();
