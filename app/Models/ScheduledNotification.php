@@ -9,7 +9,7 @@ class ScheduledNotification extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['user_ids', 'message', 'scheduled_at', 'is_sent','user_id'];
+    protected $fillable = ['user_ids', 'message', 'scheduled_at', 'is_sent','user_id','course','faculty'];
 
     protected $casts = [
         'user_ids' => 'array',

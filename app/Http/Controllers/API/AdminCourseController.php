@@ -122,11 +122,14 @@ class AdminCourseController extends Controller
     {
         try {
             $validatedData = $request->validate([
-                'name'        => 'required|string|max:255',
+                'name' => 'required|string|max:255',
                 'description' => 'nullable|string',
-                'start_date'  => 'required|date',
-                'end_date'    => 'required|date|after_or_equal:start_date',
-                'schedule'    => 'nullable|string',
+                'start_date' => 'required|date',
+                'end_date' => 'required|date|after_or_equal:start_date',
+                'schedule' => 'nullable|string',
+                'faculty_name' => 'nullable|string',
+                'teacher_name' => 'nullable|string',
+                'batch' => 'nullable|string',
             ]);
 
             // Automatically assign the course to the authenticated admin
@@ -136,12 +139,12 @@ class AdminCourseController extends Controller
 
             return response()->json([
                 'message' => 'Course created successfully',
-                'course'  => $course
+                'course' => $course
             ], 201);
         } catch (ValidationException $ex) {
             return response()->json([
                 'message' => 'Validation Error',
-                'errors'  => $ex->errors(),
+                'errors' => $ex->errors(),
             ], 422);
         } catch (\Exception $ex) {
             return response()->json([
@@ -294,18 +297,21 @@ class AdminCourseController extends Controller
         try {
             $course = Course::findOrFail($id);
             $validatedData = $request->validate([
-                'name'        => 'sometimes|required|string|max:255',
+                'name' => 'sometimes|required|string|max:255',
                 'description' => 'nullable|string',
-                'start_date'  => 'sometimes|required|date',
-                'end_date'    => 'sometimes|required|date|after_or_equal:start_date',
-                'schedule'    => 'nullable|string',
+                'start_date' => 'sometimes|required|date',
+                'end_date' => 'sometimes|required|date|after_or_equal:start_date',
+                'schedule' => 'nullable|string',
+                'faculty_name' => 'nullable|string',
+                'teacher_name' => 'nullable|string',
+                'batch' => 'nullable|string',
             ]);
 
             $course->update($validatedData);
 
             return response()->json([
                 'message' => 'Course updated successfully',
-                'course'  => $course
+                'course' => $course
             ]);
         } catch (ModelNotFoundException $mnfe) {
             return response()->json([
@@ -314,7 +320,7 @@ class AdminCourseController extends Controller
         } catch (ValidationException $ex) {
             return response()->json([
                 'message' => 'Validation Error',
-                'errors'  => $ex->errors(),
+                'errors' => $ex->errors(),
             ], 422);
         } catch (\Exception $ex) {
             return response()->json([
@@ -327,43 +333,43 @@ class AdminCourseController extends Controller
      * Remove the specified course from storage.
      */
 
-     /**
- * @OA\Delete(
- *     path="/api/admin/courses/{id}",
- *     tags={"Admin - Courses"},
- *     summary="Delete a course",
- *     description="Deletes a specific course by its ID.",
- *     security={{"bearerAuth":{}}},
- *     @OA\Parameter(
- *         name="id",
- *         in="path",
- *         required=true,
- *         description="ID of the course to delete",
- *         @OA\Schema(type="integer", example=2)
- *     ),
- *     @OA\Response(
- *         response=200,
- *         description="Course deleted successfully",
- *         @OA\JsonContent(
- *             @OA\Property(property="message", type="string", example="Course deleted successfully")
- *         )
- *     ),
- *     @OA\Response(
- *         response=404,
- *         description="Course not found",
- *         @OA\JsonContent(
- *             @OA\Property(property="message", type="string", example="Please check the Id of the user then try again")
- *         )
- *     ),
- *     @OA\Response(
- *         response=500,
- *         description="Server Error",
- *         @OA\JsonContent(
- *             @OA\Property(property="message", type="string", example="Something Error occurred")
- *         )
- *     )
- * )
- */
+    /**
+     * @OA\Delete(
+     *     path="/api/admin/courses/{id}",
+     *     tags={"Admin - Courses"},
+     *     summary="Delete a course",
+     *     description="Deletes a specific course by its ID.",
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID of the course to delete",
+     *         @OA\Schema(type="integer", example=2)
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Course deleted successfully",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Course deleted successfully")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Course not found",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Please check the Id of the user then try again")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Server Error",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Something Error occurred")
+     *         )
+     *     )
+     * )
+     */
 
     public function destroy($id)
     {

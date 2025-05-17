@@ -71,7 +71,7 @@ class GroupController extends DM_Basecontroller
     {
         parent::saveLog('Viewed the group list.');
         // Retrieve all groups with their associated course and members
-        $groups = Group::with(['course:id,name', 'members.user'])->get();
+        $groups = Group::with(['course', 'members.user'])->get();
         if ($groups->isEmpty()) {
             return response()->json([
                 'message' => 'No data found'

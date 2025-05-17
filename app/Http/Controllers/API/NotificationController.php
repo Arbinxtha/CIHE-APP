@@ -3,10 +3,12 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Models\Course;
 use App\Models\GroupMember;
 use App\Models\ScheduledNotification;
 use App\Models\User;
 use Carbon\Carbon;
+use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -311,17 +313,32 @@ class NotificationController extends DM_Basecontroller
                 'user_ids' => 'required|array',
                 'user_ids.*'   => 'exists:users,id',
                 'message' => 'required|string',
+                'course' => 'nullable|string',
+                'faculty' => 'nullable|string',
                 'scheduled_at' => [
                     'required',
                     'date',
                 ],
             ]);
 
-            ScheduledNotification::create([
-                'user_id' => Auth::id(),
-                'user_ids' => json_encode($request->user_ids),
-                'message' => $request->message,
+             $message = $request->message;
+
+            // Append course and faculty if they exist
+            if ($request->course) {
+                $message .= ' (Course: ' . $request->course . ')';
+            }
+
+            if ($request->faculty) {
+                $message .= ' - Faculty: ' . $request->faculty;
+            }
+
+             ScheduledNotification::create([
+                'user_id'      => Auth::id(),
+                'user_ids'     => json_encode($request->user_ids),
+                'message'      => $message,
                 'scheduled_at' => $request->scheduled_at,
+                'course'       => $request->course,
+                'faculty'      => $request->faculty,
             ]);
 
             return response()->json([
@@ -802,6 +819,25 @@ class NotificationController extends DM_Basecontroller
             return response()->json([
                 'error' => 'Something went wrong while fetching notification data.'
             ], 500);
+        }
+    }
+    public function getcourse()
+    {
+        try {
+            $course = Course::all();
+            return response()->json($course);
+        } catch (Exception $ex) {
+            return response()->json(['message' => 'Something error occured'], 500);
+        }
+    }
+
+    public function getfaculty($id)
+    {
+        try {
+            $faculty =  Course::where('id', $id)->get(['id', 'faculty_name']);
+            return response()->json($faculty);
+        } catch (Exception $ex) {
+            return response()->json(['message' => 'Something error occured'], 500);
         }
     }
 }
