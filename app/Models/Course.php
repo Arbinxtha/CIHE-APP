@@ -16,6 +16,9 @@ class Course extends Model
         'end_date',
         'schedule',
         'created_by',
+        'faculty_name',
+        'teacher_name',
+        'batch'
     ];
 
     // The admin who created the course

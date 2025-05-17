@@ -176,6 +176,11 @@ Route::middleware('auth:sanctum')->group(function () {
   // Get all notifications for the current user
   Route::get('notifications', [NotificationController::class, 'index']);
   Route::post('notifications', [NotificationController::class, 'store']);
+
+  Route::get('course-for-notification', [NotificationController::class, 'getcourse']);
+
+  // Route::get('faculty-for-notification/{id}', [NotificationController::class, 'getfaculty']);
+
   Route::get('get-schedule-notification',[NotificationController::class,'get_notifications']);
   Route::delete('delete-schedule-notification/{id}',[NotificationController::class,'deletenotification']);
   Route::get('get-schedule-notification-by-month/{month}',[NotificationController::class,'notificationbymonth']);
