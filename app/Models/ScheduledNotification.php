@@ -16,3 +16,5 @@ class ScheduledNotification extends Model
         'scheduled_at' => 'datetime',
     ];
 }
+
+
