@@ -318,10 +318,12 @@ class NotificationController extends DM_Basecontroller
                 'scheduled_at' => [
                     'required',
                     'date',
+                    'after:' . now()->addMinutes(5)->toDateTimeString(),
+
                 ],
             ]);
 
-             $message = $request->message;
+            $message = $request->message;
 
             // Append course and faculty if they exist
             if ($request->course) {
@@ -332,7 +334,7 @@ class NotificationController extends DM_Basecontroller
                 $message .= ' - Faculty: ' . $request->faculty;
             }
 
-             ScheduledNotification::create([
+            ScheduledNotification::create([
                 'user_id'      => Auth::id(),
                 'user_ids'     => json_encode($request->user_ids),
                 'message'      => $message,
@@ -428,8 +430,8 @@ class NotificationController extends DM_Basecontroller
                 return response()->json([
                     'students' => $students,
                 ]);
-            }else {
-                 $studentIds = GroupMember::whereIn('group_id', $groupIds)
+            } else {
+                $studentIds = GroupMember::whereIn('group_id', $groupIds)
                     ->where('user_id', '!=', $userId)
                     ->pluck('user_id');
 
@@ -738,50 +740,50 @@ class NotificationController extends DM_Basecontroller
     //         ], 500);
     //     }
     // }
-/**
- * @OA\Get(
- *     path="/api/get-all-schedule-notification",
- *     summary="Get all unsent scheduled notifications for the current year",
- *     description="Returns a list of all scheduled notifications where is_sent is false and user_id matches the authenticated user.",
- *     operationId="getAllScheduledNotifications",
- *     tags={"Notifications"},
- *     security={{"sanctum": {}}},
- *     @OA\Response(
- *         response=200,
- *         description="List of unsent scheduled notifications",
- *         @OA\JsonContent(
- *             type="object",
- *             @OA\Property(
- *                 property="events",
- *                 type="array",
- *                 @OA\Items(
- *                     type="object",
- *                     @OA\Property(property="date", type="string", format="date", example="2025-05-13"),
- *                     @OA\Property(property="time", type="string", format="time", example="15:24"),
- *                     @OA\Property(property="Message", type="string", example="Admitted"),
- *                     @OA\Property(
- *                         property="users",
- *                         type="array",
- *                         @OA\Items(
- *                             type="object",
- *                             @OA\Property(property="id", type="integer", example=11),
- *                             @OA\Property(property="username", type="string", example="Arbind Shrestha")
- *                         )
- *                     ),
- *                     @OA\Property(property="is_sent", type="boolean", example=false)
- *                 )
- *             )
- *         )
- *     ),
- *     @OA\Response(
- *         response=500,
- *         description="Server error",
- *         @OA\JsonContent(
- *             @OA\Property(property="error", type="string", example="Something went wrong while fetching notification data.")
- *         )
- *     )
- * )
- */
+    /**
+     * @OA\Get(
+     *     path="/api/get-all-schedule-notification",
+     *     summary="Get all unsent scheduled notifications for the current year",
+     *     description="Returns a list of all scheduled notifications where is_sent is false and user_id matches the authenticated user.",
+     *     operationId="getAllScheduledNotifications",
+     *     tags={"Notifications"},
+     *     security={{"sanctum": {}}},
+     *     @OA\Response(
+     *         response=200,
+     *         description="List of unsent scheduled notifications",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(
+     *                 property="events",
+     *                 type="array",
+     *                 @OA\Items(
+     *                     type="object",
+     *                     @OA\Property(property="date", type="string", format="date", example="2025-05-13"),
+     *                     @OA\Property(property="time", type="string", format="time", example="15:24"),
+     *                     @OA\Property(property="Message", type="string", example="Admitted"),
+     *                     @OA\Property(
+     *                         property="users",
+     *                         type="array",
+     *                         @OA\Items(
+     *                             type="object",
+     *                             @OA\Property(property="id", type="integer", example=11),
+     *                             @OA\Property(property="username", type="string", example="Arbind Shrestha")
+     *                         )
+     *                     ),
+     *                     @OA\Property(property="is_sent", type="boolean", example=false)
+     *                 )
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Server error",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="error", type="string", example="Something went wrong while fetching notification data.")
+     *         )
+     *     )
+     * )
+     */
 
     public function getAllScheduledNotifications()
     {

@@ -215,6 +215,7 @@ class DashboardController extends DM_Basecontroller
                 'data' => ['students' => $students],
             ], 200);
         } catch (\Exception $e) {
+            \Log::info('Sorry there:'. $e->getMessage());
             return response()->json([
                 'message' => 'Failed to fetch students.',
                 'error' => $e->getMessage(),
