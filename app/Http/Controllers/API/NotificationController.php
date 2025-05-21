@@ -149,7 +149,7 @@ class NotificationController extends DM_Basecontroller
             }
 
             // Fetch notifications and handle potential errors
-            $notifications = $user->notifications()->latest()->get();
+            $notifications = $user->unreadNotifications()->latest()->get();
 
             // If no notifications exist, return an appropriate message
             if ($notifications->isEmpty()) {
@@ -186,12 +186,12 @@ class NotificationController extends DM_Basecontroller
     /**
      * Mark a specific notification as read.
      */
-    public function markAsRead(Request $request, $id)
+   public function markAsRead(Request $request, $id)
     {
         $user = $request->user();
         $notification = $user->notifications()->findOrFail($id);
         $notification->markAsRead();
-        return response()->json(['message' => 'Notification marked as read']);
+        return response()->json(['message' => 'Notification deleted sucessfully']);
     }
 
     /**
@@ -793,7 +793,7 @@ class NotificationController extends DM_Basecontroller
             // Fetch all unsent notifications for the current year
             $notifications = ScheduledNotification::whereBetween('scheduled_at', [$startOfYear, $endOfYear])
                 ->where('is_sent', false)
-                ->where('user_id', Auth::id())
+                // ->where('user_id', Auth::id())
                 ->get();
 
             $events = [];

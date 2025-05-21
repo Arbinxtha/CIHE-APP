@@ -189,7 +189,7 @@ Route::middleware('auth:sanctum')->group(function () {
   Route::get('notifications-students', [NotificationController::class, 'getstudents']);
 
   // Mark a specific notification as read
-  Route::put('notifications/{id}/read', [NotificationController::class, 'markAsRead']);
+  Route::delete('notifications/{id}/delete', [NotificationController::class, 'markAsRead']);
 
   // Mark all notifications as read
   Route::put('notifications/read-all', [NotificationController::class, 'markAllAsRead']);
